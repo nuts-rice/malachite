@@ -54,7 +54,7 @@ jobs:
         run: cargo llvm-cov nextest -p informalsystems-malachitebft-test-mbt --all-features --lcov --output-path lcov.info
       - name: Generate text report
         run: cargo llvm-cov report
-      - name: Genrate code coverage for Intergration  
+      - name: Generate code coverage for Intergration  
         run: | 
           cargo llvm-cov nextest \
             --workspace \
