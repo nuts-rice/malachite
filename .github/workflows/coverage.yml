@@ -72,7 +72,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: code/lcov-mbt.info code/lcov-intergration.info
+          files: code/lcov-mbt.info, code/lcov-intergration.info
           flags: mbt-intergration
           fail_ci_if_error: false
 
