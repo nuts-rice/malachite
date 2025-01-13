@@ -20,8 +20,8 @@ env:
 
 jobs:
 
-  mbt + intergration:
-    name: MBT + Intergration
+  mbt-intergration:
+    name: MBT Intergration
     runs-on: ubuntu-latest
     defaults:
       run:
