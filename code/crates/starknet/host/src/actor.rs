@@ -26,7 +26,6 @@ use crate::mempool::{MempoolMsg, MempoolRef};
 use crate::proto::Protobuf;
 use crate::types::*;
 
-/// Host actor for the Starknet mock app
 pub struct Host {
     mempool: MempoolRef,
     network: NetworkRef<MockContext>,
