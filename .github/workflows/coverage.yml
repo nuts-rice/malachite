@@ -141,4 +141,17 @@ jobs:
           fail_ci_if_error: false
       - name: Upload MBT coverage to Codecov 
         uses: codecov/codecov-action@v4
-
+        if: ${{ !cancelled() }}
+        with:
+           token: ${{ secrets.CODECOV_TOKEN }}
+           files: code/lcov-mbt.info
+           flags: mbt
+           fail_ci_if_error: false
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: junit.xml
+          flags: integration
+          fail_ci_if_error: false
