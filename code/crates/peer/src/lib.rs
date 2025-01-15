@@ -19,8 +19,12 @@
 // DEALINGS IN THE SOFTWARE.
 
 // FIXME: Make the crate no_std compatible once https://github.com/multiformats/rust-multihash/issues/375 is resolved
+#![no_std]
 
-use std::{fmt, str::FromStr};
+use core::fmt;
+use core::fmt::Debug;
+use core::str;
+use core::str::FromStr;
 
 use thiserror::Error;
 
@@ -99,21 +103,26 @@ impl PeerId {
     }
 
     /// Returns a raw bytes representation of this `PeerId`.
-    pub fn to_bytes(self) -> Vec<u8> {
-        self.multihash.to_bytes()
+    pub fn to_bytes(self) -> [u8; 32] {
+        let mut buf = [0u8; 32];
+        buf.copy_from_slice(self.multihash.digest());
+        buf
     }
 
     /// Returns a base-58 encoded string of this `PeerId`.
-    pub fn to_base58(self) -> String {
-        bs58::encode(self.to_bytes()).into_string()
+    pub fn to_base58(self) -> [u8; 64] {
+        let mut buf = [0u8; 32];
+        let mut result = [0u8; 64];
+        buf.copy_from_slice(self.multihash.digest());
+        let _ = bs58::encode(buf).onto(&mut result[..]);
+        result
     }
 }
 
-impl TryFrom<Vec<u8>> for PeerId {
-    type Error = Vec<u8>;
-
-    fn try_from(value: Vec<u8>) -> Result<Self, Self::Error> {
-        PeerId::from_bytes(&value).map_err(|_| value)
+impl TryFrom<&[u8]> for PeerId {
+    type Error = [u8; 32];
+    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        PeerId::from_bytes(value).map_err(|_| value.try_into().unwrap())
     }
 }
 
@@ -137,7 +146,7 @@ impl From<PeerId> for Multihash {
     }
 }
 
-impl From<PeerId> for Vec<u8> {
+impl From<PeerId> for [u8; 32] {
     fn from(peer_id: PeerId) -> Self {
         peer_id.to_bytes()
     }
